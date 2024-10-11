@@ -1,0 +1,23 @@
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+columns_with_zeros = ['Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI']
+
+for column in columns_with_zeros:
+    median_value = data[column][data[column] != 0].median()
+    data[column] = data[column].replace(0, median_value)
+
+scaler = StandardScaler()
+features = data.drop('Outcome', axis=1)
+scaled_features = scaler.fit_transform(features)
+
+scaled_data = pd.DataFrame(scaled_features, columns=features.columns)
+scaled_data['Outcome'] = data['Outcome']
+
+X = scaled_data.drop('Outcome', axis=1)
+y = scaled_data['Outcome']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+train_size = X_train.shape, y_train.shape
+test_size = X_test.shape, y_test.shape
+train_size, test_size
